@@ -1,32 +1,29 @@
-from flask import render_template, redirect, url_for, session
-from datetime import datetime
+from flask import render_template, redirect, url_for
+from flask_login import current_user, login_required
 
 from . import main
-from .forms import NameForm
+from .forms import PostForm
 from .. import db
-from ..models import User
+from ..models import Post
+from ..email import send_email
 
 
 @main.route("/", methods=['GET', 'POST'])
+@login_required
 def index():
-    form = NameForm()
+    form = PostForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.name.data).first()
-        if not user:
-            user = User(username=form.name.data)
-            db.session.add(user)
-            session['known'] = False
-        else:
-            session['known'] = True
-        session['name'] = form.name.data
+        post = Post(body=form.body.data, author=current_user._get_current_object())
+        db.session.add(post)
         return redirect(url_for('main.index'))
-    return render_template("index.html",
-                           form=form,
-                           name=session.get('name'),
-                           known=session.get('known', False),
-                           current_time=datetime.utcnow())
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template("index.html", form=form, posts=posts)
 
 
-@main.route("/user/<name>")
-def user(name):
-    return render_template("user.html", name=name)
+
+@main.route("/test/sendemail")
+def email_test():
+    user = {
+        "username": "sara"
+    }
+    send_email("412008380@qq.com", 'New User', 'mail/new_user', user=user)
