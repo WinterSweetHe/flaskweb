@@ -9,20 +9,18 @@ from .. import db
 
 
 @main.route("/", methods=['GET', 'POST'])
-@login_required
 def index():
-    form = PostForm()
-    if form.validate_on_submit():
-        post = Post(body=form.body.data, author=current_user._get_current_object())
-        db.session.add(post)
-        return redirect(url_for('main.index'))
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template("index.html", form=form, posts=posts)
+    name = 'stranger'
+    if current_user.is_authenticated:
+        name = current_user.username
 
+    return render_template('index.html', name=name)
 
-@main.route("/test/sendemail")
-def email_test():
-    user = {
-        "username": "sara"
-    }
-    send_email("412008380@qq.com", 'New User', 'mail/new_user', user=user)
+    # form = PostForm()
+    # if form.validate_on_submit():
+    #     post = Post(body=form.body.data, author=current_user._get_current_object())
+    #     db.session.add(post)
+    #     return redirect(url_for('main.index'))
+    # posts = Post.query.order_by(Post.timestamp.desc()).all()
+    # return render_template("index.html", form=form, posts=posts)
+
