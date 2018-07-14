@@ -1,11 +1,9 @@
 import os
-
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-password = "pywvynuurnbcdhdb"
 
+class Config():
 
-class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
 
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
@@ -16,8 +14,6 @@ class Config:
     MAIL_USE_SSL = True
     MAIL_USERNAME = '3188498816'
     MAIL_PASSWORD = 'iuwymeolmviudhdc'
-
-
 
     FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
     FLASKY_MAIL_SENDER = '<3188498816@qq.com>'

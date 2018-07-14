@@ -3,9 +3,9 @@ from flask_login import current_user, login_required
 
 from . import main
 from .forms import PostForm
-from .. import db
 from ..models import Post
 from ..email import send_email
+from .. import db
 
 
 @main.route("/", methods=['GET', 'POST'])
@@ -18,7 +18,6 @@ def index():
         return redirect(url_for('main.index'))
     posts = Post.query.order_by(Post.timestamp.desc()).all()
     return render_template("index.html", form=form, posts=posts)
-
 
 
 @main.route("/test/sendemail")
